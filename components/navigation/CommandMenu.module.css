@@ -1,0 +1,224 @@
+.dialog {
+  width: min(640px, calc(100vw - 2rem));
+  max-height: min(560px, calc(100dvh - 6rem));
+  margin: 12vh auto auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  overflow: visible;
+}
+
+.dialog::backdrop {
+  background: rgb(10 10 10 / 0.28);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.dialog[open] {
+  animation: menu-in 320ms var(--ease-out) both;
+}
+
+.dialog[open]::backdrop {
+  animation: backdrop-in 240ms var(--ease-out) both;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.panel {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  max-height: inherit;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow:
+    0 40px 100px -30px rgb(10 10 10 / 0.45),
+    0 8px 24px -12px rgb(10 10 10 / 0.2);
+  overflow: hidden;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 0 var(--s-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.searchBar {
+  flex: none;
+  width: 16px;
+  height: 3px;
+  background: var(--graphite);
+  transform: skewX(var(--slant));
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 60px;
+  border: 0;
+  background: transparent;
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--subtle);
+}
+
+.esc,
+.foot kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 0.35rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--muted);
+}
+
+.list {
+  margin: 0;
+  padding: var(--s-2);
+  list-style: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.group {
+  padding: var(--s-4) var(--s-3) var(--s-2);
+  color: var(--subtle);
+}
+
+.option {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--s-4);
+  min-height: 48px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background-color var(--dur-1) var(--ease-out);
+}
+
+.option[aria-selected="true"] {
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.optionLabel {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.optionHint {
+  overflow: hidden;
+  color: var(--subtle);
+  font-size: var(--fs-small);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.optionIcon {
+  color: var(--subtle);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+}
+
+.option[aria-selected="true"] .optionIcon {
+  opacity: 1;
+  transform: none;
+  color: var(--ink);
+}
+
+.empty {
+  padding: var(--s-7) var(--s-4);
+  color: var(--muted);
+  text-align: center;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  padding: var(--s-3) var(--s-5);
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--subtle);
+}
+
+.foot span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.footBrand {
+  margin-left: auto;
+}
+
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: 56px;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.8125rem;
+  opacity: 0;
+  transform: translate(-50%, 6px);
+  pointer-events: none;
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+}
+
+.toast[data-show] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (max-width: 560px) {
+  .dialog {
+    margin-top: var(--s-5);
+  }
+
+  .optionHint {
+    display: none;
+  }
+
+  .foot {
+    display: none;
+  }
+}

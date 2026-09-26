@@ -1,0 +1,119 @@
+.footer {
+  padding: var(--s-9) 0 var(--s-6);
+  background: var(--paper-2);
+  border-top: 1px solid var(--line);
+}
+
+.top {
+  display: grid;
+  gap: var(--s-8);
+}
+
+@media (min-width: 960px) {
+  .top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  }
+}
+
+.brand {
+  display: grid;
+  align-content: start;
+  gap: var(--s-5);
+}
+
+.logoLink {
+  width: fit-content;
+  padding: 4px 0;
+  border-radius: var(--r-sm);
+}
+
+.tagline {
+  max-width: 18rem;
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-7) var(--s-5);
+}
+
+@media (min-width: 640px) {
+  .cols {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.col ul {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.colTitle {
+  color: var(--subtle);
+  margin-bottom: var(--s-3);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 32px;
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+  border-radius: var(--r-xs);
+  word-break: break-word;
+  transition: color var(--dur-2) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+}
+
+.ext {
+  width: 12px;
+  height: 12px;
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-9);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line-strong);
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.backTop {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  border-radius: var(--r-xs);
+  transition: color var(--dur-2) var(--ease-out);
+}
+
+.backTopIcon {
+  display: inline-block;
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .backTop:hover {
+    color: var(--ink);
+  }
+
+  .backTop:hover .backTopIcon {
+    transform: translateY(-3px);
+  }
+}

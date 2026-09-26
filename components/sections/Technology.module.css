@@ -1,0 +1,641 @@
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+  background: linear-gradient(to bottom, var(--paper), var(--paper-2) 60%, var(--paper));
+  border-top: 1px solid var(--line);
+}
+
+.cards {
+  display: grid;
+  gap: var(--s-4);
+  margin-top: var(--s-9);
+}
+
+@media (min-width: 800px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-5);
+  }
+}
+
+.item {
+  display: grid;
+}
+
+.card {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+  transition:
+    border-color var(--dur-3) var(--ease-out),
+    box-shadow var(--dur-3) var(--ease-out);
+}
+
+/* Soft pointer light */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(420px circle at var(--mx) var(--my), rgb(10 10 10 / 0.045), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    border-color: rgb(10 10 10 / 0.3);
+    box-shadow: var(--shadow-2);
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+}
+
+.art {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-bottom: 1px solid var(--line);
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: center;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 90% at 50% 50%, transparent 30%, var(--surface) 95%);
+}
+
+@media (min-width: 1100px) {
+  .art {
+    aspect-ratio: 2 / 1;
+  }
+}
+
+.glyph {
+  position: relative;
+  z-index: 1;
+  width: min(78%, 360px);
+  height: auto;
+  overflow: visible;
+}
+
+.body {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+  padding: var(--s-5) var(--s-5) var(--s-6);
+}
+
+@media (min-width: 1100px) {
+  .body {
+    padding: var(--s-6) var(--s-6) var(--s-7);
+  }
+}
+
+.index {
+  display: flex;
+  justify-content: space-between;
+  color: var(--subtle);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+
+.status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.title {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.2;
+  margin-top: var(--s-2);
+}
+
+.summary {
+  color: var(--muted);
+  max-width: 32rem;
+  text-wrap: pretty;
+}
+
+.points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+}
+
+.points li {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  line-height: 1.2;
+}
+
+/* ---------- Glyph primitives ---------- */
+
+.gEdge,
+.gAxis {
+  stroke: var(--ink);
+  stroke-width: 1;
+  opacity: 0.16;
+  vector-effect: non-scaling-stroke;
+}
+
+.gAxis {
+  opacity: 0.45;
+}
+
+.gNode {
+  fill: var(--surface);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    fill var(--dur-2) var(--ease-out),
+    transform var(--dur-3) var(--ease-out);
+}
+
+.gFill,
+.gFillStrong {
+  fill: var(--surface);
+  stroke: var(--ink);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+
+.gFillStrong {
+  fill: var(--graphite);
+  stroke: var(--graphite);
+}
+
+.gLayer {
+  transition: transform var(--dur-4) var(--ease-out);
+}
+
+.gPoint {
+  fill: var(--ink);
+  opacity: 0.35;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.gWave {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* Entrance: glyphs assemble once the card is revealed */
+:global(html.js) [data-glyph-host] .gNode {
+  transform: scale(0);
+}
+
+:global(html.js) :global(.is-in) [data-glyph-host] .gNode {
+  transform: scale(1);
+  transition-delay: calc(300ms + var(--n) * 50ms);
+}
+
+:global(html.js) [data-glyph-host] .gLayer {
+  transform: translateY(calc((3 - var(--n)) * 8px));
+  opacity: 0;
+  transition:
+    transform var(--dur-4) var(--ease-out),
+    opacity var(--dur-3) var(--ease-out);
+}
+
+:global(html.js) :global(.is-in) [data-glyph-host] .gLayer {
+  transform: none;
+  opacity: 1;
+  transition-delay: calc(250ms + var(--n) * 90ms);
+}
+
+:global(html.js) [data-glyph-host] .gPoint {
+  transform: scale(0);
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+:global(html.js) :global(.is-in) [data-glyph-host] .gPoint {
+  transform: scale(1);
+  transition-delay: calc(250ms + var(--n) * 40ms);
+}
+
+:global(html.js) [data-glyph-host] .gWave {
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1800ms var(--ease-out) 300ms;
+}
+
+:global(html.js) :global(.is-in) [data-glyph-host] .gWave {
+  stroke-dashoffset: 0;
+}
+
+/* Hover: each mark responds in its own way */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :global(html) .item .card.card[data-area="ai"]:hover .gNode {
+    animation: pulse 1200ms var(--ease-out) both;
+    animation-delay: calc(var(--n) * 60ms);
+  }
+
+  :global(html) .item .card.card[data-area="software"]:hover .gLayer {
+    transform: translateY(calc(var(--n) * -7px));
+    transition-delay: calc(var(--n) * 40ms);
+  }
+
+  :global(html) .item .card.card[data-area="web"]:hover .gPoint {
+    animation: blink 1100ms var(--ease-out) both;
+    animation-delay: calc(var(--n) * 45ms);
+  }
+
+  :global(html) .item .card.card[data-area="research"]:hover .gWave {
+    animation: redraw 1600ms var(--ease-out) both;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    fill: var(--surface);
+  }
+  30% {
+    transform: scale(1.5);
+    fill: var(--ink);
+  }
+  100% {
+    transform: scale(1);
+    fill: var(--surface);
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.8);
+  }
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+}
+
+@keyframes redraw {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  40% {
+    stroke-dashoffset: -1;
+  }
+  41% {
+    stroke-dashoffset: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Page variant ---------- */
+.page {
+  padding-top: calc(var(--header-h) + var(--s-9));
+  border-top: 0;
+}
+
+/* ---------- Explorer ---------- */
+.explorer {
+  display: grid;
+  gap: var(--s-5);
+  margin-top: var(--s-9);
+}
+
+@media (min-width: 1000px) {
+  .explorer {
+    grid-template-columns: minmax(240px, 0.8fr) minmax(0, 2.2fr);
+    gap: var(--s-6);
+    align-items: start;
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: var(--s-2);
+  margin-inline: calc(var(--gutter) * -1);
+  padding: 2px var(--gutter);
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .tabs {
+    position: sticky;
+    top: calc(var(--header-h) + var(--s-5));
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border-top: 1px solid var(--ink);
+  }
+}
+
+.tab {
+  position: relative;
+  flex: none;
+  display: grid;
+  gap: 0.25rem;
+  justify-items: start;
+  min-height: 64px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+  scroll-snap-align: start;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out);
+}
+
+@media (min-width: 1000px) {
+  .tab {
+    grid-template-columns: 2.5rem 1fr;
+    align-items: center;
+    min-height: 76px;
+    padding: 0 var(--s-2);
+    border: 0;
+    border-bottom: 1px solid var(--line-strong);
+    border-radius: 0;
+    background: transparent;
+  }
+}
+
+.tabIndex {
+  color: var(--subtle);
+}
+
+.tabTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+
+@media (min-width: 1000px) {
+  .tabTitle {
+    font-size: 1.125rem;
+  }
+}
+
+.tabBar {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 8px;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0) skewX(var(--slant));
+  transform-origin: left;
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+@media (min-width: 1000px) {
+  .tabBar {
+    left: auto;
+    right: var(--s-2);
+    top: 50%;
+    bottom: auto;
+    width: 22px;
+    height: 3px;
+    margin-top: -1.5px;
+    transform: scaleX(0) skewX(var(--slant));
+    transform-origin: right;
+  }
+}
+
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--ink);
+    border-color: rgb(10 10 10 / 0.3);
+  }
+}
+
+.tab[aria-selected="true"] {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.tab[aria-selected="true"] .tabIndex {
+  color: var(--ink);
+}
+
+.tab[aria-selected="true"] .tabBar {
+  transform: scaleX(1) skewX(var(--slant));
+}
+
+@media (min-width: 1000px) {
+  .tab[aria-selected="true"] {
+    border-color: var(--line-strong);
+    background: linear-gradient(to right, var(--surface), transparent);
+  }
+}
+
+.panel {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(520px circle at var(--mx) var(--my), rgb(10 10 10 / 0.04), transparent 60%);
+}
+
+@media (min-width: 720px) {
+  .panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    min-height: 480px;
+  }
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border-bottom: 1px solid var(--line);
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: center;
+}
+
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 80% at 50% 50%, transparent 30%, var(--surface) 95%);
+}
+
+@media (min-width: 720px) {
+  .stage {
+    aspect-ratio: auto;
+    border-bottom: 0;
+    border-right: 1px solid var(--line);
+  }
+}
+
+.stageArt {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.stageArt .glyph {
+  width: min(86%, 420px);
+}
+
+.panelBody {
+  display: grid;
+  align-content: center;
+  gap: var(--s-4);
+  padding: var(--s-6) var(--s-5);
+}
+
+@media (min-width: 1000px) {
+  .panelBody {
+    padding: var(--s-8) var(--s-7);
+  }
+}
+
+.panelTitle {
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.1;
+  margin-top: var(--s-2);
+}
+
+.panelLead {
+  font-size: var(--fs-lead);
+  line-height: 1.45;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-top: var(--s-4);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+}
+
+.step {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: transparent;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .step:hover {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+}
+
+.step:active {
+  transform: scale(0.94);
+}
+
+.step:focus-visible {
+  border-radius: 50%;
+}
+
+.stepCount {
+  display: flex;
+  gap: 6px;
+}
+
+.stepCount span {
+  width: 18px;
+  height: 3px;
+  background: var(--line-strong);
+  transform: skewX(var(--slant));
+  transition:
+    background-color var(--dur-3) var(--ease-out),
+    width var(--dur-3) var(--ease-out);
+}
+
+.stepCount span[data-on] {
+  width: 32px;
+  background: var(--ink);
+}
