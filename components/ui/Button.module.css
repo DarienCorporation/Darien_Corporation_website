@@ -1,0 +1,185 @@
+.button {
+  --btn-bg: var(--ink);
+  --btn-fg: var(--paper);
+  --btn-wipe: #383838;
+  --btn-border: var(--ink);
+
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0 1.25rem 0 1.375rem;
+  border: 1px solid var(--btn-border);
+  border-radius: var(--r-pill);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0);
+  transition:
+    transform var(--dur-3) var(--ease-out),
+    color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    background-color var(--dur-2) var(--ease-out),
+    opacity var(--dur-2) var(--ease-out);
+}
+
+/* Slanted wipe — echoes the italic of the wordmark */
+.wipe {
+  position: absolute;
+  inset: -1px -30%;
+  z-index: -1;
+  background: var(--btn-wipe);
+  transform: translate3d(-101%, 0, 0) skewX(var(--slant));
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+.label {
+  position: relative;
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
+}
+
+.icon svg {
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .button:hover .wipe {
+    transform: translate3d(0, 0, 0) skewX(var(--slant));
+  }
+
+  .button:hover .icon svg {
+    animation: nudge var(--dur-3) var(--ease-out);
+  }
+}
+
+@keyframes nudge {
+  0% {
+    transform: translateX(0);
+  }
+  45% {
+    transform: translateX(120%);
+  }
+  46% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.button:active {
+  transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0) scale(0.97);
+  transition-duration: var(--dur-1);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: var(--r-pill);
+}
+
+.button:disabled,
+.button[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.button:disabled .wipe {
+  transform: translate3d(-101%, 0, 0) skewX(var(--slant));
+}
+
+.button[data-loading] {
+  opacity: 1;
+  cursor: progress;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  border-right-color: transparent;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Variants */
+.secondary {
+  --btn-bg: transparent;
+  --btn-fg: var(--ink);
+  --btn-wipe: var(--ink);
+  --btn-border: var(--line-strong);
+}
+
+@media (hover: hover) {
+  .secondary:hover {
+    --btn-fg: var(--paper);
+    --btn-border: var(--ink);
+  }
+}
+
+.ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--ink);
+  --btn-wipe: transparent;
+  --btn-border: transparent;
+  padding-inline: 0.25rem;
+  min-height: 44px;
+}
+
+/* On dark surfaces */
+.dark {
+  --btn-bg: var(--night-ink);
+  --btn-fg: var(--night);
+  --btn-wipe: #ffffff;
+  --btn-border: var(--night-ink);
+  --focus: var(--night-ink);
+}
+
+.dark.secondary {
+  --btn-bg: transparent;
+  --btn-fg: var(--night-ink);
+  --btn-wipe: var(--night-ink);
+  --btn-border: var(--night-line-strong);
+}
+
+@media (hover: hover) {
+  .dark.secondary:hover {
+    --btn-fg: var(--night);
+    --btn-border: var(--night-ink);
+  }
+}
+
+.dark:focus-visible {
+  outline-color: var(--night-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:hover .icon svg {
+    animation: none;
+  }
+}

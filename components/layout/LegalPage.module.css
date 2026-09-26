@@ -1,0 +1,240 @@
+.page {
+  padding: calc(var(--header-h) + var(--s-9)) 0 var(--section-y);
+  animation: page-in var(--dur-4) var(--ease-out) both;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.header {
+  display: grid;
+  gap: var(--s-5);
+  padding-bottom: var(--s-7);
+  margin-bottom: var(--s-7);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--muted);
+}
+
+.bar {
+  width: 22px;
+  height: 3px;
+  background: var(--graphite);
+  transform: skewX(var(--slant));
+}
+
+.title {
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--lh-snug);
+}
+
+.updated {
+  color: var(--subtle);
+}
+
+.prose {
+  max-width: 44rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+.prose h2 {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.25;
+  color: var(--ink);
+  margin: var(--s-7) 0 var(--s-3);
+}
+
+.prose p + p,
+.prose ul + p,
+.prose p + ul {
+  margin-top: var(--s-4);
+}
+
+.prose ul {
+  padding-left: 1.25rem;
+}
+
+.prose li + li {
+  margin-top: var(--s-2);
+}
+
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.headerTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+/* Segmented switch */
+.switch {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+}
+
+.switchThumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  transform: translateX(calc(var(--i) * 100%));
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+.switchItem {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 96px;
+  min-height: 36px;
+  padding: 0 1rem;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--muted);
+  transition: color var(--dur-3) var(--ease-out);
+}
+
+.switchItem[aria-current] {
+  color: var(--paper);
+}
+
+@media (hover: hover) {
+  .switchItem:not([aria-current]):hover {
+    color: var(--ink);
+  }
+}
+
+/* Layout with contents */
+.layout {
+  display: grid;
+  gap: var(--s-7);
+}
+
+@media (min-width: 1000px) {
+  .layout {
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: var(--s-9);
+  }
+}
+
+.aside {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .aside {
+    display: block;
+  }
+}
+
+.toc {
+  position: sticky;
+  top: calc(var(--header-h) + var(--s-6));
+}
+
+.tocTitle {
+  color: var(--subtle);
+  margin-bottom: var(--s-4);
+}
+
+.toc ol {
+  display: grid;
+  border-left: 1px solid var(--line-strong);
+}
+
+.tocLink {
+  position: relative;
+  display: block;
+  padding: 0.4rem 0 0.4rem var(--s-4);
+  font-size: var(--fs-small);
+  color: var(--muted);
+  transition: color var(--dur-2) var(--ease-out);
+}
+
+.tocLink::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  background: var(--ink);
+  transform: translateY(-50%) skewY(var(--slant));
+  transition: height var(--dur-3) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .tocLink:hover {
+    color: var(--ink);
+  }
+}
+
+.tocLink[aria-current] {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.tocLink[aria-current]::before {
+  height: 60%;
+}
+
+.prose h2 {
+  scroll-margin-top: calc(var(--header-h) + var(--s-5));
+}
+
+.contactCard {
+  display: grid;
+  gap: var(--s-2);
+  max-width: 44rem;
+  margin-top: var(--s-8);
+  padding: var(--s-5);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.contactCard .meta {
+  color: var(--subtle);
+}
+
+.contactEmail {
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  word-break: break-all;
+}

@@ -1,0 +1,387 @@
+/* ---------- Hero ----------
+   Entrance sequence (all CSS; the page is usable immediately):
+   0ms grid → 250ms logo (header) → 350ms dial → 500ms headline words
+   → 1000ms lead → 1150ms actions → 1350ms index strip. */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 100svh;
+  min-height: clamp(640px, 100svh, 1040px);
+  padding-top: calc(var(--header-h) + var(--s-7));
+  padding-bottom: var(--s-6);
+  overflow: clip;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 88px 88px;
+  background-position: calc(50% + 44px) 0;
+  mask-image: radial-gradient(120% 90% at 70% 40%, #000 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(120% 90% at 70% 40%, #000 20%, transparent 75%);
+  animation: establish 1200ms var(--ease-out) both;
+}
+
+.light {
+  position: absolute;
+  inset: -20% -10% auto auto;
+  width: 90vmax;
+  height: 90vmax;
+  background: radial-gradient(closest-side, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0));
+  animation:
+    establish 1600ms var(--ease-out) both,
+    drift 24s var(--ease-in-out) 1.6s infinite alternate;
+}
+
+@keyframes establish {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-6vmax, 4vmax, 0);
+  }
+}
+
+/* Instrument */
+.instrument {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  right: -34vw;
+  width: min(120vw, 780px);
+  aspect-ratio: 1;
+  transform: translateY(-58%);
+  pointer-events: none;
+  opacity: 0.32;
+  mask-image: linear-gradient(to bottom, transparent 4%, #000 22%, #000 74%, transparent 94%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 4%, #000 22%, #000 74%, transparent 94%);
+}
+
+/* Pointer response (desktop): the dial drifts and turns slightly toward the cursor. */
+.parallax {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(calc(var(--px, 0) * -22px), calc(var(--py, 0) * -16px), 0)
+    rotate(calc(var(--px, 0) * 6deg));
+  transition: transform 1400ms var(--ease-out);
+}
+
+.instrumentInner {
+  position: absolute;
+  inset: 0;
+  animation: dial-in 1800ms var(--ease-out) 350ms both;
+}
+
+@keyframes dial-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.spinSlow {
+  animation: spin 240s linear infinite;
+  will-change: transform;
+}
+
+.spinReverse {
+  animation: spin 180s linear infinite reverse;
+  will-change: transform;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ring,
+.ringFaint {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.32;
+}
+
+.ringFaint {
+  opacity: 0.14;
+  stroke-dasharray: 2 6;
+}
+
+.tick,
+.tickMajor {
+  stroke: var(--ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.32;
+}
+
+.tickMajor {
+  opacity: 0.7;
+}
+
+.cross {
+  stroke: var(--ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 3 7;
+  opacity: 0.16;
+}
+
+.center {
+  fill: var(--ink);
+  opacity: 0.6;
+}
+
+.arcMark {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.arcFaint {
+  fill: none;
+  stroke: var(--graphite);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.7;
+}
+
+.dialLabel {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  fill: var(--graphite);
+}
+
+/* Content */
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--s-8);
+}
+
+.content {
+  display: grid;
+  align-content: center;
+  flex: 1;
+  gap: var(--s-5);
+  max-width: 62rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--ink);
+  animation: rise 900ms var(--ease-out) 350ms both;
+}
+
+.eyebrowBar {
+  width: 28px;
+  height: 3px;
+  background: var(--graphite);
+  transform: skewX(var(--slant));
+}
+
+.title {
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-display);
+  font-weight: 600;
+  max-width: 11.5ch;
+  text-wrap: balance;
+}
+
+html.js .title :global(.split-word) > span {
+  animation: word-up 1300ms var(--ease-out) both;
+  animation-delay: calc(500ms + var(--i) * 70ms);
+}
+
+@keyframes word-up {
+  from {
+    transform: translate3d(0, 108%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.lead {
+  max-width: 34rem;
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--muted);
+  text-wrap: pretty;
+  animation: rise 1000ms var(--ease-out) 1000ms both;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  padding-top: var(--s-3);
+  animation: rise 1000ms var(--ease-out) 1150ms both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Now → Horizon index strip */
+.index {
+  display: grid;
+  gap: var(--s-4);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line-strong);
+  animation: rise 1000ms var(--ease-out) 1350ms both;
+}
+
+.indexCol {
+  display: grid;
+  gap: var(--s-1);
+}
+
+.indexCol dt {
+  color: var(--subtle);
+}
+
+.indexCol dd {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.indexRule {
+  display: none;
+}
+
+@media (min-width: 720px) {
+  .index {
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: var(--s-7);
+  }
+
+  .indexCol:last-child {
+    text-align: right;
+  }
+
+  .indexRule {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 16px;
+    padding-bottom: 5px;
+  }
+
+  .indexRule span {
+    width: 1px;
+    height: 6px;
+    background: var(--line-strong);
+  }
+
+  .indexRule .ruleMajor {
+    height: 14px;
+    background: var(--graphite);
+  }
+}
+
+@media (min-width: 720px) {
+  .instrument {
+    right: -22vw;
+    opacity: 0.6;
+  }
+}
+
+@media (min-width: 1100px) {
+  .instrument {
+    right: max(-300px, -16vw);
+    width: min(60vw, 900px);
+    transform: translateY(-50%);
+    opacity: 0.85;
+  }
+}
+
+/* Scroll-linked exit: content drifts up and fades as the hero leaves. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .inner {
+      animation: hero-exit linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 80%;
+    }
+
+    .instrument {
+      animation: dial-exit linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+
+@keyframes hero-exit {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -8vh, 0);
+  }
+}
+
+@keyframes dial-exit {
+  to {
+    translate: 0 12vh;
+    scale: 1.08;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinSlow,
+  .spinReverse,
+  .light {
+    animation: none;
+  }
+}

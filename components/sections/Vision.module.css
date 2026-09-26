@@ -1,0 +1,616 @@
+/* The vision section is the one "night" surface on the site: moving from
+   light to dark marks the boundary between current work and long-term research. */
+
+.section {
+  position: relative;
+  padding-inline: 0;
+}
+
+.surface {
+  --focus: var(--night-ink);
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--section-y);
+  background: var(--night);
+  color: var(--night-ink);
+  overflow: clip;
+  border-radius: var(--r-lg);
+}
+
+.surface ::selection {
+  background: var(--night-ink);
+  color: var(--night);
+}
+
+/* Scroll-linked arrival: the surface widens from an inset panel to full bleed. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 720px) {
+    .surface {
+      animation: open-surface linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+  }
+}
+
+@keyframes open-surface {
+  from {
+    clip-path: inset(0 var(--gutter) 0 var(--gutter) round var(--r-lg));
+  }
+  to {
+    clip-path: inset(0 0 0 0 round var(--r-lg));
+  }
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--night-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--night-line) 1px, transparent 1px);
+  background-size: 88px 88px;
+  background-position: calc(50% + 44px) 0;
+  mask-image: linear-gradient(to bottom, #000, transparent 55%);
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 55%);
+  opacity: 0.6;
+}
+
+.backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 70%;
+  background: radial-gradient(60% 60% at 50% 0%, rgb(255 255 255 / 0.06), transparent 70%);
+}
+
+.inner {
+  position: relative;
+}
+
+/* ---------- Now → Horizon ---------- */
+.horizon {
+  display: grid;
+  gap: var(--s-5);
+  margin-top: var(--s-9);
+  padding: var(--s-5);
+  border: 1px solid var(--night-line-strong);
+  border-radius: var(--r-md);
+  background: rgb(255 255 255 / 0.02);
+}
+
+.phase {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.phaseLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--night-ink);
+}
+
+.phaseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--night-ink);
+}
+
+.phase[data-phase="horizon"] .phaseLabel {
+  color: var(--night-muted);
+}
+
+.phase[data-phase="horizon"] .phaseDot {
+  background: transparent;
+  border: 1px solid var(--night-muted);
+}
+
+.phaseItems {
+  font-size: var(--fs-small);
+  color: var(--night-muted);
+  line-height: 1.5;
+}
+
+.track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 12px;
+}
+
+.trackNow {
+  flex: 0 0 22%;
+  height: 2px;
+  background: var(--night-ink);
+}
+
+.trackMarker {
+  width: 3px;
+  height: 12px;
+  background: var(--night-ink);
+  transform: skewX(var(--slant));
+}
+
+.trackFuture {
+  flex: 1;
+  height: 0;
+  border-top: 1px dashed var(--night-line-strong);
+}
+
+/* Draw the track on reveal */
+:global(html.js) .horizon .trackNow,
+:global(html.js) .horizon .trackFuture {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1400ms var(--ease-out) 300ms;
+}
+
+:global(html.js) .horizon .trackFuture {
+  transition-delay: 800ms;
+  transition-duration: 1800ms;
+}
+
+:global(html.js) .horizon:global(.is-in) .trackNow,
+:global(html.js) .horizon:global(.is-in) .trackFuture {
+  transform: none;
+}
+
+@media (min-width: 960px) {
+  .horizon {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--s-6);
+    padding: var(--s-6);
+  }
+
+  .phase[data-phase="horizon"] {
+    text-align: right;
+    justify-items: end;
+  }
+}
+
+/* ---------- Cards ---------- */
+.grid {
+  display: grid;
+  gap: var(--s-4);
+  margin-top: var(--s-5);
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.item {
+  display: grid;
+}
+
+.card {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
+  gap: var(--s-3);
+  padding: var(--s-5);
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: linear-gradient(to bottom, var(--night-2), var(--night));
+  overflow: hidden;
+  transition:
+    border-color var(--dur-3) var(--ease-out),
+    background-color var(--dur-3) var(--ease-out);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(360px circle at var(--mx) var(--my), rgb(255 255 255 / 0.06), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    border-color: var(--night-line-strong);
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+}
+
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--night-muted);
+}
+
+.badge {
+  padding: 0.25rem 0.5rem;
+  border: 1px dashed var(--night-line-strong);
+  border-radius: var(--r-xs);
+  font-size: 0.625rem;
+}
+
+.art {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 12 / 7;
+  margin: var(--s-3) 0 var(--s-2);
+  border-bottom: 1px solid var(--night-line);
+}
+
+.mark {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  overflow: visible;
+}
+
+.title {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.2;
+}
+
+.summary {
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--night-muted);
+  text-wrap: pretty;
+}
+
+.note {
+  margin-top: var(--s-7);
+  color: var(--night-muted);
+  max-width: 44rem;
+  line-height: 1.7;
+}
+
+/* ---------- Marks ---------- */
+.mLine,
+.mFaint {
+  fill: none;
+  stroke: var(--night-ink);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.mFaint {
+  stroke-width: 1;
+  opacity: 0.28;
+}
+
+.mLine {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.mDot {
+  fill: var(--night-muted);
+}
+
+.mDotSolid {
+  fill: var(--night-ink);
+}
+
+.mJoint {
+  fill: var(--night);
+  stroke: var(--night-ink);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+:global(html.js) .item .mLine {
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1600ms var(--ease-out) 350ms;
+}
+
+:global(html.js) .item:global(.is-in) .mLine {
+  stroke-dashoffset: 0;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :global(html) .item .card:hover .mLine {
+    animation: trace 1400ms var(--ease-out) both;
+  }
+}
+
+@keyframes trace {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Page variant ---------- */
+.page {
+  padding-top: calc(var(--header-h) + var(--s-3));
+}
+
+.page .surface {
+  padding-top: var(--s-9);
+}
+
+/* ---------- Horizon scrubber ---------- */
+.scrubber {
+  display: grid;
+  gap: var(--s-6);
+  margin-top: var(--s-9);
+  padding: var(--s-5);
+  border: 1px solid var(--night-line-strong);
+  border-radius: var(--r-lg);
+  background: rgb(255 255 255 / 0.02);
+}
+
+@media (min-width: 720px) {
+  .scrubber {
+    padding: var(--s-7);
+  }
+}
+
+.scrubHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.scrubHint {
+  display: none;
+  color: var(--night-muted);
+  opacity: 0.7;
+}
+
+@media (min-width: 720px) {
+  .scrubHint {
+    display: block;
+  }
+}
+
+.scrubHead [data-phase="horizon"] {
+  color: var(--night-muted);
+}
+
+.phaseDotHollow {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--night-muted);
+}
+
+.scrubTrack {
+  position: relative;
+  height: 72px;
+  margin: 0 12px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.scrubTrack[data-dragging] {
+  cursor: grabbing;
+}
+
+.scrubRail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 24px;
+  border-top: 1px dashed var(--night-line-strong);
+}
+
+.scrubFill {
+  position: absolute;
+  left: 0;
+  top: 23px;
+  height: 2px;
+  background: var(--night-ink);
+  transition: width var(--dur-3) var(--ease-out);
+}
+
+.scrubTrack[data-dragging] .scrubFill,
+.scrubTrack[data-dragging] .scrubHandle {
+  transition: none;
+}
+
+.scrubStop {
+  position: absolute;
+  top: 24px;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  border: 1px solid var(--night-muted);
+  background: var(--night);
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    transform var(--dur-3) var(--ease-out);
+}
+
+.scrubStop[data-kind="current"],
+.scrubStop[data-passed],
+.scrubStop[data-on] {
+  border-color: var(--night-ink);
+  background: var(--night-ink);
+}
+
+.scrubStop[data-on] {
+  transform: scale(1.35);
+}
+
+.scrubStopLabel {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  translate: -50% 0;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--night-muted);
+  opacity: 0;
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    color var(--dur-2) var(--ease-out);
+}
+
+.scrubStop[data-on] .scrubStopLabel {
+  opacity: 1;
+  color: var(--night-ink);
+  scale: 0.74; /* counter the stop's scale */
+}
+
+.scrubStop:first-of-type .scrubStopLabel {
+  left: 0;
+  translate: -5px 0;
+}
+
+.scrubStop:last-of-type .scrubStopLabel {
+  left: auto;
+  right: 0;
+  translate: 5px 0;
+}
+
+@media (min-width: 720px) {
+  .scrubStopLabel {
+    opacity: 1;
+  }
+}
+
+.scrubHandle {
+  position: absolute;
+  top: 24px;
+  width: 6px;
+  height: 36px;
+  margin: -18px 0 0 -3px;
+  border-radius: 1px;
+  background: var(--night-ink);
+  transform: skewX(var(--slant));
+  box-shadow: 0 0 0 6px rgb(10 10 11 / 0.9);
+  cursor: grab;
+  transition: left var(--dur-3) var(--ease-out);
+  outline: none;
+}
+
+.scrubHandle::after {
+  content: "";
+  position: absolute;
+  inset: -14px -16px;
+}
+
+.scrubHandle:focus-visible {
+  box-shadow:
+    0 0 0 6px rgb(10 10 11 / 0.9),
+    0 0 0 8px var(--night-ink);
+}
+
+.scrubPanel {
+  display: grid;
+  gap: var(--s-5);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--night-line);
+}
+
+@media (min-width: 800px) {
+  .scrubPanel {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--s-8);
+    min-height: 240px;
+  }
+}
+
+.scrubPanelText {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+}
+
+.badge[data-kind="current"] {
+  border-style: solid;
+  border-color: var(--night-ink);
+  color: var(--night-ink);
+}
+
+.scrubTitle {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+  font-weight: 600;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.05;
+}
+
+.scrubSummary {
+  max-width: 34rem;
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--night-muted);
+  text-wrap: pretty;
+}
+
+.scrubList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.scrubList li {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--night-line-strong);
+  border-radius: var(--r-pill);
+  font-size: 0.8125rem;
+  color: var(--night-ink);
+}
+
+.scrubDisclaimer {
+  color: var(--night-muted);
+}
+
+.scrubArt {
+  display: grid;
+  place-items: center;
+  padding: var(--s-4);
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background:
+    linear-gradient(to right, var(--night-line) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(to bottom, var(--night-line) 1px, transparent 1px) 0 0 / 24px 24px;
+}
+
+.scrubArt .mLine {
+  animation: trace 1400ms var(--ease-out) both;
+}
+
+.mBlock,
+.mBlockSolid {
+  fill: none;
+  stroke: var(--night-ink);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+
+.mBlockSolid {
+  fill: var(--night-ink);
+}
